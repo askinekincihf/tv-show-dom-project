@@ -8,14 +8,23 @@
   padding: 0.3rem;
  border-radius: 5px;
  border: 1px solid lightgrey;
- /* color: rgb(123, 107, 216); */
  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 };
 
 .search-result {
   text-align: end;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .title {
   color: darkblue;
+}
+
+.search {
+  outline: none
+}
+
+.card:hover {
+  cursor: pointer;
+  width: 102%;
 }
