@@ -7,11 +7,12 @@ function header() {
   const rootElem = document.getElementById("root");
   rootElem.innerHTML = `
       <div class="container">
-        <form class="d-flex col-12 mb-3">
-          <select class="episode-select me-5" id="movie" name="movies">     
+        <form class="mb-3">
+          <select class="episode-select me-md-5 col-12 col-md-5 mb-2" id="movie" name="movies"> 
+          <option class="select-option" value="">See All Episodes</option>; 
           </select>
-          <input class="me-3 search" type="search" placeholder="Search" aria-label="Search">
-          <p class="search-result"></p>
+          <input class="me-3 col-md-5 col-12 mb-2 search" type="search" placeholder="Search" aria-label="Search">
+          <p class="search-result text-end"></p>
           </form>
       </div>
       <div class="container">
@@ -22,15 +23,21 @@ function header() {
 function makePageForEpisodes(episodeList) {
   header();
 
+  // Selectors
   const wrapper = document.querySelector("#wrapper");
   const dropdownMenu = document.querySelector(".episode-select");
+  let searchField = document.querySelector(".search");
+  const countEpisodes = document.querySelector(".search-result");
+  countEpisodes.innerText = `Display ${episodeList.length} of ${episodeList.length} episodes`;
 
+  // Show default Display
   episodeList.forEach(episode => {
-    const episodeTitleFormat = `${episode.season > 9 ? episode.season : "0" + episode.season}`
-    const episodeTitle = `${episode.name} - S${episodeTitleFormat}E${episodeTitleFormat}`
+    const episodeSeason = `${episode.season > 9 ? episode.season : "0" + episode.season}`
+    const episodeNumber = `${episode.number > 9 ? episode.number : "0" + episode.number}`
+    const episodeTitle = `${episode.name} - S${episodeSeason}E${episodeNumber}`
     wrapper.innerHTML += `
         <div class="col card-wrapper">
-          <div class="card p-3 h-100 pt-3">
+          <div class="card bg-light p-3 h-100 pt-3">
             <div class="card">
               <h5 class="card-title title d-flex justify-content-center text-center">${episodeTitle}</h5>
             </div>
@@ -40,22 +47,27 @@ function makePageForEpisodes(episodeList) {
           </div>
         </div>`
 
+    const dropDownEpisodeTitle = `S${episodeSeason}E${episodeNumber} - ${episode.name}`
+    const optionValue = episodeTitle;
     dropdownMenu.innerHTML += `
-          <option class="select-option" value="">${episodeTitle}</option>;
+          <option class="select-option" value="${optionValue}">${dropDownEpisodeTitle}</option>;
         `
   })
 
-  let searchField = document.querySelector(".search");
-  const countEpisodes = document.querySelector(".search-result");
-  countEpisodes.innerText = `Display ${episodeList.length} of ${episodeList.length} episodes`;
-  searchField.addEventListener("keyup", function () {
+  // Events
+  searchField.addEventListener("input", searchEpisodes);
+  dropdownMenu.addEventListener("change", searchDropdown);
+
+  // Functions
+  function searchEpisodes() {
     countEpisodes.innerText = "";
     let count = 0;
-    let formattedSearch = searchField.value.toLowerCase();
-    const allCards = document.querySelectorAll(".card-wrapper")
+    const searchFieldValue = searchField.value
+    let searchValue = searchFieldValue.toLowerCase();
+    const allCards = document.querySelectorAll(".card-wrapper");
     allCards.forEach(card => {
       const cardValue = card.textContent.toLowerCase();
-      if (cardValue.includes(formattedSearch)) {
+      if (cardValue.includes(searchValue)) {
         card.style.display = "";
         count++;
         countEpisodes.innerText = `Display ${count} of ${allCards.length} episodes`;
@@ -64,7 +76,27 @@ function makePageForEpisodes(episodeList) {
         countEpisodes.innerText = `Display ${count} of ${allCards.length} episodes`;
       }
     })
-  })
+  }
+
+  function searchDropdown(e) {
+    countEpisodes.innerText = "";
+    let count = 0;
+    const dropdownMenuValue = e.currentTarget.value;
+    let value = dropdownMenuValue.toLowerCase();
+    const allCards = document.querySelectorAll(".card-wrapper");
+    allCards.forEach(card => {
+      const cardValue = card.textContent.toLowerCase();
+      console.log(cardValue)
+      if (cardValue.includes(value)) {
+        card.style.display = "";
+        count++;
+        countEpisodes.innerText = `Display ${count} of ${allCards.length} episodes`;
+      } else {
+        card.style.display = "none";
+        countEpisodes.innerText = `Display ${count} of ${allCards.length} episodes`;
+      }
+    })
+  }
 
 }
 
