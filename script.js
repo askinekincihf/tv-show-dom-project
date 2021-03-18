@@ -67,6 +67,7 @@ function makePageForEpisodes(episodeList) {
   }
 
   function searchDropdown(e) {
+    searchField.value = "";
     const dropdownMenuValue = e.currentTarget.value;
     let value = dropdownMenuValue.toLowerCase();
     search(value);
