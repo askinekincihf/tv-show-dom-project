@@ -1,34 +1,40 @@
-function setup() {
-  const allEpisodes = getAllEpisodes();
+function onLoad() {
+  getData("https://api.tvmaze.com/shows/82/episodes");
+  getData("https://api.tvmaze.com/shows/527/episodes");
+}
+
+function getData(url) {
+  fetch(url)
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error(`Encountered something unexpected: ${response.status} ${response.statusText}`);
+      }
+    })
+    .then((content) => {
+      console.log(content);
+      setup(content);
+    })
+    .catch(error => showErrorMessage(error))
+}
+
+function showErrorMessage(error) {
+  alert(`Encountered something unexpected: ${error}`);
+}
+
+function setup(content) {
+  const allEpisodes = content;
   makePageForEpisodes(allEpisodes);
 }
 
-function header() {
-  const rootElem = document.getElementById("root");
-  rootElem.innerHTML = `
-      <div class="container">
-        <form class="mb-3">
-          <select class="episode-select me-md-5 col-12 col-md-5 mb-2" id="movie" name="movies"> 
-          <option class="select-option" value="">See All Episodes</option>; 
-          </select>
-          <input class="me-3 col-md-5 col-12 mb-2 search" type="search" placeholder="Search" aria-label="Search">
-          <p class="search-result text-end"></p>
-          </form>
-      </div>
-      <div class="container">
-        <div id="wrapper" class="row row-cols-1 row-cols-md-3 g-4">
-      </div>`
-}
-
 function makePageForEpisodes(episodeList) {
-  header();
-
   // Selectors
   const wrapper = document.querySelector("#wrapper");
   const dropdownMenu = document.querySelector(".episode-select");
   let searchField = document.querySelector(".search");
   const countEpisodes = document.querySelector(".search-result");
-  countEpisodes.innerText = `Display ${episodeList.length} of ${episodeList.length} episodes`;
+  countEpisodes.innerText = `Display ${episodeList.length} of ${episodeList.length} episode(s)`;
 
   // Show default Display
   episodeList.forEach(episode => {
@@ -82,10 +88,10 @@ function makePageForEpisodes(episodeList) {
       if (cardValue.includes(value)) {
         card.style.display = "";
         count++;
-        countEpisodes.innerText = `Display ${count} of ${allCards.length} episodes`;
+        countEpisodes.innerText = `Display ${count} of ${allCards.length} episode(s)`;
       } else {
         card.style.display = "none";
-        countEpisodes.innerText = `Display ${count} of ${allCards.length} episodes`;
+        countEpisodes.innerText = `Display ${count} of ${allCards.length} episode(s)`;
       }
     })
   }
@@ -97,4 +103,4 @@ function makePageForEpisodes(episodeList) {
 
 }
 
-window.onload = setup;
+window.onload = onLoad;

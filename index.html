@@ -15,7 +15,20 @@
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="container">
+        <form class="mb-3">
+          <select class="episode-select me-md-5 col-12 col-md-5 mb-2" id="movie" name="movies"> 
+          <option class="select-option" value="">See All Episodes</option>; 
+          </select>
+          <input class="me-3 col-md-5 col-12 mb-2 search" type="search" placeholder="Search" aria-label="Search">
+          <p class="search-result text-end"></p>
+          </form>
+      </div>
+      <div class="container">
+        <div id="wrapper" class="row row-cols-1 row-cols-md-3 g-4">
+      </div>
+    </div>
 
     <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
     <script src="episodes.js"></script>
