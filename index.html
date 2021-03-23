@@ -18,10 +18,13 @@
     <div id="root">
       <div class="container">
         <form class="mb-3">
-          <select class="episode-select me-md-5 col-12 col-md-5 mb-2" id="movie" name="movies"> 
-          <option class="select-option" value="">See All Episodes</option>; 
+          <select class="show-select me-md-3 col-12 col-md-3 mb-2" id="movie" name="movies"> 
+          <option class="show-option" value="">Select Shows</option>; 
           </select>
-          <input class="me-3 col-md-5 col-12 mb-2 search" type="search" placeholder="Search" aria-label="Search">
+          <select class="episode-select me-md-3 col-12 col-md-3 mb-2" id="movie" name="movies"> 
+            <option class="episode-option" value="">All Episodes</option>; 
+            </select>
+          <input class="me-3 col-md-3 col-12 mb-2 search" type="search" placeholder="Search" aria-label="Search">
           <p class="search-result text-end"></p>
           </form>
       </div>
@@ -29,15 +32,16 @@
         <div id="wrapper" class="row row-cols-1 row-cols-md-3 g-4">
       </div>
     </div>
-
-    <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
-    <script src="episodes.js"></script>
-
-    <!-- Loads YOUR javascript code -->
-    <script src="script.js"></script>
     <footer class="text-center m-5">
       The data has originally come from
       <a href="https://www.tvmaze.com/">TVMaze.com</a>.
     </footer>
+
+    <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
+    <script src="episodes.js"></script>
+    <script src="shows.js"></script>
+
+    <!-- Loads YOUR javascript code -->
+    <script src="script.js"></script>
   </body>
 </html>

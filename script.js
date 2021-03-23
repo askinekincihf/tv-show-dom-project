@@ -1,6 +1,33 @@
 function onLoad() {
-  getData("https://api.tvmaze.com/shows/82/episodes");
-  getData("https://api.tvmaze.com/shows/527/episodes");
+  selectShows();
+}
+
+function selectShows() {
+  const allShows = getAllShows();
+  const dropdownShowMenu = document.querySelector(".show-select");
+  const sortedAllShows = allShows.map(show => show.name).sort();
+  console.log(sortedAllShows)
+  allShows.forEach(show => {
+    dropdownShowMenu.innerHTML += `
+    <option class="show-option" value="${show.id}">${show.name}</option>
+  `
+  })
+
+  dropdownShowMenu.addEventListener("change", (e) => {
+    const wrapper = document.querySelector("#wrapper");
+    wrapper.innerHTML = "";
+    const countEpisodes = document.querySelector(".search-result");
+    const dropdownEpisodeMenu = document.querySelector(".episode-select");
+    dropdownEpisodeMenu.innerHTML = `<option class="episode-option" value="">All Episodes</option>`
+    const dropdownShowMenuValue = e.currentTarget.value;
+    if (dropdownShowMenuValue) {
+      const selectedUrl = `https://api.tvmaze.com/shows/${dropdownShowMenuValue}/episodes`
+      getData(selectedUrl);
+    } else {
+      wrapper.innerHTML = "";
+      countEpisodes.innerText = "";
+    }
+  })
 }
 
 function getData(url) {
@@ -13,7 +40,6 @@ function getData(url) {
       }
     })
     .then((content) => {
-      console.log(content);
       setup(content);
     })
     .catch(error => showErrorMessage(error))
@@ -31,7 +57,7 @@ function setup(content) {
 function makePageForEpisodes(episodeList) {
   // Selectors
   const wrapper = document.querySelector("#wrapper");
-  const dropdownMenu = document.querySelector(".episode-select");
+  const dropdownEpisodeMenu = document.querySelector(".episode-select");
   let searchField = document.querySelector(".search");
   const countEpisodes = document.querySelector(".search-result");
   countEpisodes.innerText = `Display ${episodeList.length} of ${episodeList.length} episode(s)`;
@@ -55,14 +81,14 @@ function makePageForEpisodes(episodeList) {
 
     const dropDownEpisodeTitle = `S${episodeSeason}E${episodeNumber} - ${episode.name}`;
     const optionValue = episodeTitle;
-    dropdownMenu.innerHTML += `
-          <option class="select-option" value="${optionValue}">${dropDownEpisodeTitle}</option>
+    dropdownEpisodeMenu.innerHTML += `
+          <option class="episode-option" value="${optionValue}">${dropDownEpisodeTitle}</option>
         `
   })
 
   // Events
   searchField.addEventListener("input", searchEpisodes);
-  dropdownMenu.addEventListener("change", searchDropdown);
+  dropdownEpisodeMenu.addEventListener("change", searchDropdown);
   searchField.addEventListener("click", resetSearch);
 
   // Functions
@@ -74,8 +100,8 @@ function makePageForEpisodes(episodeList) {
 
   function searchDropdown(e) {
     searchField.value = "";
-    const dropdownMenuValue = e.currentTarget.value;
-    let value = dropdownMenuValue.toLowerCase();
+    const dropdownEpisodeMenuVale = e.currentTarget.value;
+    let value = dropdownEpisodeMenuVale.toLowerCase();
     search(value);
   }
 
@@ -97,7 +123,7 @@ function makePageForEpisodes(episodeList) {
   }
 
   function resetSearch() {
-    dropdownMenu.selectedIndex = 0;
+    dropdownEpisodeMenu.selectedIndex = 0;
     searchEpisodes();
   }
 

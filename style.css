@@ -4,7 +4,7 @@
   /* background-color: rgb(250, 246, 231); */
 }
 
-.episode-select, .search {
+.episode-select, .search, .show-select {
   padding: 0.3rem;
  border-radius: 5px;
  border: 1px solid lightgrey;
