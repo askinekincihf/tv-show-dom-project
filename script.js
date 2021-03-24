@@ -5,9 +5,8 @@ function onLoad() {
 function selectShows() {
   const allShows = getAllShows();
   const dropdownShowMenu = document.querySelector(".show-select");
-  const sortedAllShows = allShows.map(show => show.name).sort();
-  console.log(sortedAllShows)
-  allShows.forEach(show => {
+  const sortedAllShows = allShows.sort(titleCaseInsensitive);
+  sortedAllShows.forEach(show => {
     dropdownShowMenu.innerHTML += `
     <option class="show-option" value="${show.id}">${show.name}</option>
   `
@@ -28,6 +27,18 @@ function selectShows() {
       countEpisodes.innerText = "";
     }
   })
+}
+
+function titleCaseInsensitive(showA, showB) {
+  let nameA = showA.name.toLowerCase();
+  let nameB = showB.name.toLowerCase();
+  if (nameA < nameB) {
+    return -1;
+  }
+  if (nameA > nameB) {
+    return 1;
+  }
+  return 0;
 }
 
 function getData(url) {
