@@ -36,7 +36,7 @@ function makePageForShows(allShows) {
             <div class="card px-2 pt-2 mb-2">
               <p class="show-detail"><span class="show-detail-bold">Rated:</span> ${show.rating.average}</p>
               <p class="show-detail"><span class="show-detail-bold">Genres:</span> ${show.genres}</p>
-              <p class="show-detail"><span class="show-detail-bold">Status:</span ${show.status}</p>
+              <p class="show-detail"><span class="show-detail-bold">Status:</span> ${show.status}</p>
               <p class="show-detail"><span class="show-detail-bold">Runtime:</span> ${show.runtime}</p>
             </div>
             <a href="${show.url}">See Details</a>
@@ -55,6 +55,8 @@ function makeHeaderLink() {
 }
 
 function headerLink(e) {
+  const title = e.currentTarget.textContent
+  console.log(title)
   const currentTitle = e.currentTarget.dataset;
   const currentTitleId = currentTitle.id;
   const headerURL = `https://api.tvmaze.com/shows/${currentTitleId}/episodes`;
@@ -63,7 +65,6 @@ function headerLink(e) {
   wrapper.innerHTML = "";
   const dropdownEpisodeMenu = document.querySelector(".episode-select");
   dropdownEpisodeMenu.style.display = "";
-
 }
 
 function titleCaseInsensitive(showA, showB) {
@@ -89,6 +90,7 @@ function selectShowsMenu(e) {
   if (showId) {
     const selectedUrl = `https://api.tvmaze.com/shows/${showId}/episodes`
     getData(selectedUrl);
+    dropdownEpisodeMenu.innerHTML = `<option class="episode-option" value="">All Episodes</option>`
     dropdownEpisodeMenu.style.display = "";
   } else {
     wrapper.innerHTML = "";
