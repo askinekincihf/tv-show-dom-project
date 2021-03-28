@@ -23,7 +23,7 @@
   outline: none
 }
 
-.card:hover {
+.card-title:hover {
   cursor: pointer;
   width: 102%;
 }

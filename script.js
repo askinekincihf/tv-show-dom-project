@@ -13,28 +13,30 @@ function selectShows() {
   })
 
   dropdownShowMenu.addEventListener("change", selectShowsMenu);
-
   makePageForShows(allShows);
 }
 
 function makePageForShows(allShows) {
-  const wrapper = document.querySelector("#wrapper");
+  countEpisodes(allShows);
+  makeSearch();
 
+  const wrapper = document.querySelector("#wrapper");
   allShows.forEach(show => {
+    const getImage = show.image !== null ? show.image.medium : "";
     wrapper.innerHTML += `
         <div class="col card-wrapper">
           <div class="card bg-light p-3 h-100 pt-3">
             <div class="card">
               <h5 class="card-title title d-flex justify-content-center text-center">${show.name}</h5>
             </div>
-            <img src="${show.image.medium}" class="img mb-2 mt-2 px-3" alt="${show.name}" />
+            <img src="${getImage}" class="img mb-2 mt-2 px-3" alt="no image found" />
             ${show.summary}
             <a href="${show.url}">See Details</a>
           </div>
         </div>`
   })
-}
 
+}
 
 function titleCaseInsensitive(showA, showB) {
   let nameA = showA.name.toLowerCase();
@@ -142,19 +144,25 @@ function search(value) {
     if (cardValue.includes(value)) {
       card.style.display = "";
       count++;
-      countEpisode.innerText = `Display ${count} of ${allCards.length} episode(s)`;
+      countEpisode.innerText = `Display ${count} of ${allCards.length} ${getShowOrEpisode()}(s)`;
     } else {
       card.style.display = "none";
-      countEpisode.innerText = `Display ${count} of ${allCards.length} episode(s)`;
+      countEpisode.innerText = `Display ${count} of ${allCards.length} ${getShowOrEpisode()}(s)`;
     }
   })
 }
 
 function countEpisodes(episodeList) {
   const countEpisode = document.querySelector(".search-result");
-  countEpisode.innerText = `Display ${episodeList.length} of ${episodeList.length} episode(s)`;
+  countEpisode.innerText = `Display ${episodeList.length} of ${episodeList.length} ${getShowOrEpisode()}(s)`;
 }
 
+function getShowOrEpisode() {
+  const dropdownShowMenu = document.querySelector(".show-select");
+  if (dropdownShowMenu.selectedIndex === 0) {
+    return "show"
+  } else return "episode"
+}
 
 function makePageForEpisodes(episodeList) {
   // Selectors
@@ -163,6 +171,7 @@ function makePageForEpisodes(episodeList) {
 
   // Show default Display
   episodeList.forEach(episode => {
+    const getImage = episode.image === null ? "" : episode.image.medium;
     const episodeSeason = `${episode.season > 9 ? episode.season : "0" + episode.season}`;
     const episodeNumber = `${episode.number > 9 ? episode.number : "0" + episode.number}`;
     const episodeTitle = `${episode.name} - S${episodeSeason}E${episodeNumber}`;
@@ -172,7 +181,7 @@ function makePageForEpisodes(episodeList) {
             <div class="card">
               <h5 class="card-title title d-flex justify-content-center text-center">${episodeTitle}</h5>
             </div>
-            <img src="${episode.image.medium}" class="img mb-2 mt-2 px-3" alt="${episode.name}" />
+            <img src="${getImage}" class="img mb-2 mt-2 px-3" alt="no image found" />
             ${episode.summary}
             <a href="${episode.url}">See Details</a>
           </div>
