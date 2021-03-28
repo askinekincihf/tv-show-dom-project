@@ -27,3 +27,7 @@
   cursor: pointer;
   width: 102%;
 }
+
+.show-detail-bold {
+  font-weight: 700;
+}

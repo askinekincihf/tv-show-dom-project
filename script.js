@@ -19,6 +19,8 @@ function selectShows() {
 function makePageForShows(allShows) {
   countEpisodes(allShows);
   makeSearch();
+  const dropdownEpisodeMenu = document.querySelector(".episode-select");
+  dropdownEpisodeMenu.style.display = "none";
 
   const wrapper = document.querySelector("#wrapper");
   allShows.forEach(show => {
@@ -27,14 +29,40 @@ function makePageForShows(allShows) {
         <div class="col card-wrapper">
           <div class="card bg-light p-3 h-100 pt-3">
             <div class="card">
-              <h5 class="card-title title d-flex justify-content-center text-center">${show.name}</h5>
+              <h5 class="card-title title d-flex justify-content-center text-center" data-id="${show.id}">${show.name}</h5>
             </div>
             <img src="${getImage}" class="img mb-2 mt-2 px-3" alt="no image found" />
             ${show.summary}
+            <div class="card px-2 pt-2 mb-2">
+              <p class="show-detail"><span class="show-detail-bold">Rated:</span> ${show.rating.average}</p>
+              <p class="show-detail"><span class="show-detail-bold">Genres:</span> ${show.genres}</p>
+              <p class="show-detail"><span class="show-detail-bold">Status:</span ${show.status}</p>
+              <p class="show-detail"><span class="show-detail-bold">Runtime:</span> ${show.runtime}</p>
+            </div>
             <a href="${show.url}">See Details</a>
           </div>
         </div>`
   })
+
+  makeHeaderLink();
+}
+
+function makeHeaderLink() {
+  const title = document.querySelectorAll(".title");
+  title.forEach(title => {
+    title.addEventListener("click", headerLink)
+  })
+}
+
+function headerLink(e) {
+  const currentTitle = e.currentTarget.dataset;
+  const currentTitleId = currentTitle.id;
+  const headerURL = `https://api.tvmaze.com/shows/${currentTitleId}/episodes`;
+  getData(headerURL);
+  const wrapper = document.querySelector("#wrapper");
+  wrapper.innerHTML = "";
+  const dropdownEpisodeMenu = document.querySelector(".episode-select");
+  dropdownEpisodeMenu.style.display = "";
 
 }
 
@@ -57,11 +85,11 @@ function selectShowsMenu(e) {
   wrapper.innerHTML = "";
   const countEpisodes = document.querySelector(".search-result");
   const dropdownEpisodeMenu = document.querySelector(".episode-select");
-  dropdownEpisodeMenu.innerHTML = `<option class="episode-option" value="">All Episodes</option>`
   const showId = e.currentTarget.value;
   if (showId) {
     const selectedUrl = `https://api.tvmaze.com/shows/${showId}/episodes`
     getData(selectedUrl);
+    dropdownEpisodeMenu.style.display = "";
   } else {
     wrapper.innerHTML = "";
     countEpisodes.innerText = "";
@@ -171,7 +199,7 @@ function makePageForEpisodes(episodeList) {
 
   // Show default Display
   episodeList.forEach(episode => {
-    const getImage = episode.image === null ? "" : episode.image.medium;
+    const getImage = episode.image !== null ? episode.image.medium : "";
     const episodeSeason = `${episode.season > 9 ? episode.season : "0" + episode.season}`;
     const episodeNumber = `${episode.number > 9 ? episode.number : "0" + episode.number}`;
     const episodeTitle = `${episode.name} - S${episodeSeason}E${episodeNumber}`;
