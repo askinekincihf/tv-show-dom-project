@@ -24,27 +24,33 @@ function makePageForShows(allShows) {
 
   const wrapper = document.querySelector("#wrapper");
   allShows.forEach(show => {
-    const getImage = show.image !== null ? show.image.medium : "";
+    let {image, id, name, summary, rating, genres, status, runtime, url} = show;
+    const getImage = image !== null ? image.medium : "";
     wrapper.innerHTML += `
         <div class="col card-wrapper">
           <div class="card bg-light p-3 h-100 pt-3">
             <div class="card">
-              <h5 class="card-title title d-flex justify-content-center text-center" data-id="${show.id}">${show.name}</h5>
+              <h5 class="card-title title d-flex justify-content-center text-center" data-id="${id}">${name}</h5>
             </div>
             <img src="${getImage}" class="img mb-2 mt-2 px-3" alt="no image found" />
-            ${show.summary}
+            ${summary}
             <div class="card px-2 pt-2 mb-2">
-              <p class="show-detail"><span class="show-detail-bold">Rated:</span> ${show.rating.average}</p>
-              <p class="show-detail"><span class="show-detail-bold">Genres:</span> ${show.genres}</p>
-              <p class="show-detail"><span class="show-detail-bold">Status:</span> ${show.status}</p>
-              <p class="show-detail"><span class="show-detail-bold">Runtime:</span> ${show.runtime}</p>
+              <p class="show-detail"><span class="show-detail-bold">Rated:</span> ${rating.average}</p>
+              <p class="show-detail"><span class="show-detail-bold">Genres:</span> ${genres}</p>
+              <p class="show-detail"><span class="show-detail-bold">Status:</span> ${status}</p>
+              <p class="show-detail"><span class="show-detail-bold">Runtime:</span> ${runtime}</p>
             </div>
-            <a href="${show.url}">See Details</a>
+            <a href="${url}">See Details</a>
           </div>
         </div>`
   })
 
   makeHeaderLink();
+}
+
+function displayAllShows() {
+  const showBtn = document.querySelector("button")[0];
+  showBtn.addEventListener("click", selectShows);
 }
 
 function makeHeaderLink() {
@@ -63,6 +69,8 @@ function headerLink(e) {
   getData(headerURL);
   const wrapper = document.querySelector("#wrapper");
   wrapper.innerHTML = "";
+  let searchField = document.querySelector(".search");
+  searchField.value = "";
   const dropdownEpisodeMenu = document.querySelector(".episode-select");
   dropdownEpisodeMenu.style.display = "";
 }
@@ -126,7 +134,7 @@ function setup(content) {
   makePageForEpisodes(allEpisodes);
 }
 
-// Search Input Part
+
 function makeSearch() {
   let searchField = document.querySelector(".search");
   searchField.addEventListener("input", searchEpisodes);
@@ -148,7 +156,7 @@ function resetSearch() {
   searchEpisodes();
 }
 
-// Episode Dropdown Menu
+
 function makeDropdownEpisodeMenu() {
   const dropdownEpisodeMenu = document.querySelector(".episode-select");
   dropdownEpisodeMenu.addEventListener("change", searchDropdown);
@@ -195,16 +203,15 @@ function getShowOrEpisode() {
 }
 
 function makePageForEpisodes(episodeList) {
-  // Selectors
   const wrapper = document.querySelector("#wrapper");
   const dropdownEpisodeMenu = document.querySelector(".episode-select");
 
-  // Show default Display
   episodeList.forEach(episode => {
-    const getImage = episode.image !== null ? episode.image.medium : "";
-    const episodeSeason = `${episode.season > 9 ? episode.season : "0" + episode.season}`;
-    const episodeNumber = `${episode.number > 9 ? episode.number : "0" + episode.number}`;
-    const episodeTitle = `${episode.name} - S${episodeSeason}E${episodeNumber}`;
+    let {image, season, number, name, summary, url} = episode;
+    const getImage = image !== null ? image.medium : "";
+    const episodeSeason = `${season > 9 ? season : "0" + season}`;
+    const episodeNumber = `${number > 9 ? number : "0" + number}`;
+    const episodeTitle = `${name} - S${episodeSeason}E${episodeNumber}`;
     wrapper.innerHTML += `
         <div class="col card-wrapper">
           <div class="card bg-light p-3 h-100 pt-3">
@@ -212,12 +219,12 @@ function makePageForEpisodes(episodeList) {
               <h5 class="card-title title d-flex justify-content-center text-center">${episodeTitle}</h5>
             </div>
             <img src="${getImage}" class="img mb-2 mt-2 px-3" alt="no image found" />
-            ${episode.summary}
-            <a href="${episode.url}">See Details</a>
+            ${summary}
+            <a href="${url}">See Details</a>
           </div>
         </div>`
 
-    const dropDownEpisodeTitle = `S${episodeSeason}E${episodeNumber} - ${episode.name}`;
+    const dropDownEpisodeTitle = `S${episodeSeason}E${episodeNumber} - ${name}`;
     const optionValue = episodeTitle;
     dropdownEpisodeMenu.innerHTML += `
           <option class="episode-option" value="${optionValue}">${dropDownEpisodeTitle}</option>
