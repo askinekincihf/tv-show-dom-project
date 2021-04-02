@@ -1,17 +1,15 @@
 #root {
-  color: black;
   margin-top: 2rem;
 }
 
 .episode-select, .search, .show-select {
   padding: 0.3rem;
- border-radius: 5px;
- border: 1px solid lightgrey;
- font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  border-radius: 5px;
+  border: 1px solid lightgrey;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 };
 
 .search-result {
-  text-align: end;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
@@ -28,6 +26,6 @@
   width: 102%;
 }
 
-.show-detail-bold {
+.text-bold {
   font-weight: 700;
 }

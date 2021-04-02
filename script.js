@@ -16,64 +16,6 @@ function selectShows() {
   makePageForShows(allShows);
 }
 
-function makePageForShows(allShows) {
-  countEpisodes(allShows);
-  makeSearch();
-  const dropdownEpisodeMenu = document.querySelector(".episode-select");
-  dropdownEpisodeMenu.style.display = "none";
-
-  const wrapper = document.querySelector("#wrapper");
-  allShows.forEach(show => {
-    let {image, id, name, summary, rating, genres, status, runtime, url} = show;
-    const getImage = image !== null ? image.medium : "";
-    wrapper.innerHTML += `
-        <div class="col card-wrapper">
-          <div class="card bg-light p-3 h-100 pt-3">
-            <div class="card">
-              <h5 class="card-title title d-flex justify-content-center text-center" data-id="${id}">${name}</h5>
-            </div>
-            <img src="${getImage}" class="img mb-2 mt-2 px-3" alt="no image found" />
-            ${summary}
-            <div class="card px-2 pt-2 mb-2">
-              <p class="show-detail"><span class="show-detail-bold">Rated:</span> ${rating.average}</p>
-              <p class="show-detail"><span class="show-detail-bold">Genres:</span> ${genres}</p>
-              <p class="show-detail"><span class="show-detail-bold">Status:</span> ${status}</p>
-              <p class="show-detail"><span class="show-detail-bold">Runtime:</span> ${runtime}</p>
-            </div>
-            <a href="${url}">See Details</a>
-          </div>
-        </div>`
-  })
-
-  makeHeaderLink();
-}
-
-function displayAllShows() {
-  const showBtn = document.querySelector("button")[0];
-  showBtn.addEventListener("click", selectShows);
-}
-
-function makeHeaderLink() {
-  const title = document.querySelectorAll(".title");
-  title.forEach(title => {
-    title.addEventListener("click", headerLink)
-  })
-}
-
-function headerLink(e) {
-  const title = e.currentTarget.textContent
-  console.log(title)
-  const currentTitle = e.currentTarget.dataset;
-  const currentTitleId = currentTitle.id;
-  const headerURL = `https://api.tvmaze.com/shows/${currentTitleId}/episodes`;
-  getData(headerURL);
-  const wrapper = document.querySelector("#wrapper");
-  wrapper.innerHTML = "";
-  let searchField = document.querySelector(".search");
-  searchField.value = "";
-  const dropdownEpisodeMenu = document.querySelector(".episode-select");
-  dropdownEpisodeMenu.style.display = "";
-}
 
 function titleCaseInsensitive(showA, showB) {
   let nameA = showA.name.toLowerCase();
@@ -87,11 +29,126 @@ function titleCaseInsensitive(showA, showB) {
   return 0;
 }
 
+
+function makeCards(all) {
+  const wrapper = document.querySelector("#wrapper");
+
+  all.forEach(card => {
+    let { image, id, name, summary, url, rating, genres, status, runtime, season, number } = card;
+    const getImage = image !== null ? image.medium : "";
+
+    const episodeSeason = `${season > 9 ? season : "0" + season}`;
+    const episodeNumber = `${number > 9 ? number : "0" + number}`;
+    const episodeTitle = `${name} - S${episodeSeason}E${episodeNumber}`;
+    const title = season === undefined && number === undefined ? name : episodeTitle
+
+    const cardWrapper = document.createElement("div");
+    cardWrapper.setAttribute("class", "col card-wrapper");
+
+    const cardContainer = document.createElement("div");
+    cardContainer.setAttribute("class", "card card-container bg-light p-3 h-100 pt-3");
+
+    const cardTitleContainer = document.createElement("div");
+    cardTitleContainer.setAttribute("class", "card");
+
+    const cardTitle = document.createElement("h5");
+    cardTitle.setAttribute("class", "card-title title d-flex justify-content-center text-center data-id");
+    cardTitle.dataset.id = id;
+    cardTitle.innerText = title;
+    cardTitleContainer.appendChild(cardTitle);
+
+    const cardImage = document.createElement("img");
+    cardImage.src = getImage;
+    cardImage.setAttribute("class", "img mb-2 mt-2 px-3");
+
+    const cardSummary = document.createElement("div");
+    cardSummary.innerHTML = summary;
+
+    const showDetails = document.createElement("a");
+    showDetails.href = url;
+    showDetails.innerText = "See Details";
+
+    cardContainer.append(cardTitleContainer, cardImage, cardSummary, showDetails);
+    cardWrapper.appendChild(cardContainer);
+    wrapper.appendChild(cardWrapper);
+
+    const cardDetails = document.createElement("div");
+    cardDetails.setAttribute("class", "card card-details px-2 pt-2 mb-2 mt-3");
+
+    const getRating = rating !== undefined ? rating.average : "";
+    const showRating = document.createElement("p");
+    showRating.innerHTML = `<span class="text-bold">Rating :</span> ${getRating}`;
+
+    const showGenres = document.createElement("p");
+    showGenres.innerHTML = `<span class="text-bold">Genres :</span> ${genres}`;
+
+    const showStatus = document.createElement("p");
+    showStatus.innerHTML = `<span class="text-bold">Status :</span> ${status}`;
+
+    const showRuntime = document.createElement("p");
+    showRuntime.innerHTML = `<span class="text-bold">Runtime :</span> ${runtime}`;
+
+    cardDetails.append(showRating, showGenres, showStatus, showRuntime);
+    cardContainer.appendChild(cardDetails);
+  })
+}
+
+
+function makePageForShows(allShows) {
+  makeCards(allShows);
+  makeHeaderLink();
+  countShowsOrEpisodes(allShows);
+  makeSearch();
+
+  const dropdownEpisodeMenu = document.querySelector(".episode-select");
+  dropdownEpisodeMenu.style.display = "none";
+}
+
+
+function displayAllShows() {
+  const showBtn = document.querySelector("button");
+  showBtn.addEventListener("click", selectShows);
+}
+
+
+function makeHeaderLink() {
+  const title = document.querySelectorAll(".title");
+  title.forEach(title => {
+    title.addEventListener("click", headerLink)
+  })
+}
+
+
+function headerLink(e) {
+  const wrapper = document.querySelector("#wrapper");
+  wrapper.innerHTML = "";
+  let searchField = document.querySelector(".search");
+  searchField.value = "";
+  const dropdownEpisodeMenu = document.querySelector(".episode-select");
+  dropdownEpisodeMenu.style.display = "";
+
+  const dropdownShowMenu = document.querySelector(".show-select");
+  const headerTitle = e.currentTarget.innerText;
+  let headerTitleIndexArray = [];
+  for (show of dropdownShowMenu) {
+    headerTitleIndexArray.push(show.innerText)
+  }
+  const headerTitleIndex = headerTitleIndexArray.indexOf(headerTitle);
+  dropdownShowMenu.selectedIndex = headerTitleIndex;
+
+  const currentTitle = e.currentTarget.dataset;
+  const currentTitleId = currentTitle.id;
+  const headerURL = `https://api.tvmaze.com/shows/${currentTitleId}/episodes`;
+  getData(headerURL);
+}
+
+
 function selectShowsMenu(e) {
   let searchField = document.querySelector(".search");
   searchField.value = "";
   const wrapper = document.querySelector("#wrapper");
   wrapper.innerHTML = "";
+
   const countEpisodes = document.querySelector(".search-result");
   const dropdownEpisodeMenu = document.querySelector(".episode-select");
   const showId = e.currentTarget.value;
@@ -118,7 +175,7 @@ function getData(url) {
       }
     })
     .then((content) => {
-      setup(content);
+      display(content);
     })
     .catch(error => showErrorMessage(error))
 }
@@ -129,7 +186,7 @@ function showErrorMessage(error) {
 }
 
 
-function setup(content) {
+function display(content) {
   const allEpisodes = content;
   makePageForEpisodes(allEpisodes);
 }
@@ -164,10 +221,10 @@ function makeDropdownEpisodeMenu() {
 
 
 function searchDropdown(e) {
-  let searchField = document.querySelector(".search");
+  const searchField = document.querySelector(".search");
   searchField.value = "";
   const dropdownEpisodeMenuValue = e.currentTarget.value;
-  let value = dropdownEpisodeMenuValue.toLowerCase();
+  const value = dropdownEpisodeMenuValue.toLowerCase();
   search(value);
 }
 
@@ -182,58 +239,61 @@ function search(value) {
     if (cardValue.includes(value)) {
       card.style.display = "";
       count++;
-      countEpisode.innerText = `Display ${count} of ${allCards.length} ${getShowOrEpisode()}(s)`;
+      countEpisode.innerText = `Displaying ${count} of ${allCards.length} ${getShowOrEpisode()}(s)`;
     } else {
       card.style.display = "none";
-      countEpisode.innerText = `Display ${count} of ${allCards.length} ${getShowOrEpisode()}(s)`;
+      countEpisode.innerText = `Displaying ${count} of ${allCards.length} ${getShowOrEpisode()}(s)`;
     }
   })
 }
 
-function countEpisodes(episodeList) {
+
+function countShowsOrEpisodes(episodeList) {
   const countEpisode = document.querySelector(".search-result");
-  countEpisode.innerText = `Display ${episodeList.length} of ${episodeList.length} ${getShowOrEpisode()}(s)`;
+  countEpisode.innerText = `Displaying ${episodeList.length} of ${episodeList.length} ${getShowOrEpisode()}(s)`;
 }
+
 
 function getShowOrEpisode() {
   const dropdownShowMenu = document.querySelector(".show-select");
   if (dropdownShowMenu.selectedIndex === 0) {
     return "show"
-  } else return "episode"
+  }
+  else return "episode"
 }
 
-function makePageForEpisodes(episodeList) {
-  const wrapper = document.querySelector("#wrapper");
-  const dropdownEpisodeMenu = document.querySelector(".episode-select");
 
+function getDropdownMenuEpisodeCode(episodeList) {
+  const dropdownEpisodeMenu = document.querySelector(".episode-select");
   episodeList.forEach(episode => {
-    let {image, season, number, name, summary, url} = episode;
-    const getImage = image !== null ? image.medium : "";
+    const { season, number, name } = episode;
     const episodeSeason = `${season > 9 ? season : "0" + season}`;
     const episodeNumber = `${number > 9 ? number : "0" + number}`;
     const episodeTitle = `${name} - S${episodeSeason}E${episodeNumber}`;
-    wrapper.innerHTML += `
-        <div class="col card-wrapper">
-          <div class="card bg-light p-3 h-100 pt-3">
-            <div class="card">
-              <h5 class="card-title title d-flex justify-content-center text-center">${episodeTitle}</h5>
-            </div>
-            <img src="${getImage}" class="img mb-2 mt-2 px-3" alt="no image found" />
-            ${summary}
-            <a href="${url}">See Details</a>
-          </div>
-        </div>`
-
     const dropDownEpisodeTitle = `S${episodeSeason}E${episodeNumber} - ${name}`;
     const optionValue = episodeTitle;
     dropdownEpisodeMenu.innerHTML += `
-          <option class="episode-option" value="${optionValue}">${dropDownEpisodeTitle}</option>
-        `
+            <option class="episode-option" value="${optionValue}">${dropDownEpisodeTitle}</option>
+          `
   })
+}
 
+
+function makePageForEpisodes(episodeList) {
   makeDropdownEpisodeMenu();
+  getDropdownMenuEpisodeCode(episodeList);
+  makeCards(episodeList);
+  removeCardDetails();
   makeSearch();
-  countEpisodes(episodeList);
+  countShowsOrEpisodes(episodeList);
+}
+
+
+function removeCardDetails() {
+  const cardDetails = document.querySelectorAll(".card-details");
+  cardDetails.forEach(card => {
+    card.style.display = "none"
+  })
 }
 
 window.onload = onLoad;
