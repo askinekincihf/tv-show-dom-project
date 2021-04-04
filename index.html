@@ -3,17 +3,44 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TV Show Project | My Name (My GitHub username)</title>
+    <title>TV Show Project | Askin Ekinci (askinekincihf)</title>
     <link href="style.css" rel="stylesheet" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+      crossorigin="anonymous"
+    />
   </head>
 
   <body>
     <div id="root">
+      <div class="container">
+        <form class="mb-3">
+          <button class="btn btn-secondary me-md-3 mb-2">All Shows</button>
+          <select class="show-select me-md-3 col-12 col-md-3 mb-2" id="movie" name="movies"> 
+          <option class="show-option" value="">Select Shows</option>; 
+          </select>
+          <select class="episode-select me-md-3 col-12 col-md-3 mb-2" id="movie" name="movies"> 
+            <option class="episode-option" value="">All Episodes</option>; 
+            </select>
+          <input class="me-3 col-md-3 col-12 mb-2 search" type="search" placeholder="Search" aria-label="Search">
+          <p class="search-result text-end"></p>
+          </form>
+      </div>
+      <div class="container">
+        <div id="wrapper" class="row row-cols-1 row-cols-md-3 g-4">
+      </div>
     </div>
+    <footer class="text-center m-5">
+      The data has originally come from
+      <a href="https://www.tvmaze.com/">TVMaze.com</a>.
+    </footer>
 
     <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
     <script src="episodes.js"></script>
+    <script src="shows.js"></script>
 
     <!-- Loads YOUR javascript code -->
     <script src="script.js"></script>

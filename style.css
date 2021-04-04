@@ -1,3 +1,31 @@
 #root {
-  color: red;
+  margin-top: 2rem;
+}
+
+.episode-select, .search, .show-select {
+  padding: 0.3rem;
+  border-radius: 5px;
+  border: 1px solid lightgrey;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+};
+
+.search-result {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.title {
+  color: darkblue;
+}
+
+.search {
+  outline: none
+}
+
+.card-title:hover {
+  cursor: pointer;
+  width: 102%;
+}
+
+.text-bold {
+  font-weight: 700;
 }
