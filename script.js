@@ -2,9 +2,10 @@ function onLoad() {
   selectShows();
 }
 
+
 function selectShows() {
   const allShows = getAllShows();
-  const sortedAllShows = allShows.sort(titleCaseInsensitive);
+  const sortedAllShows = allShows.sort((a ,b) => a.name.localeCompare(b.name));
   const dropdownShowMenu = document.querySelector(".show-select");
   sortedAllShows.forEach(show => {
     dropdownShowMenu.innerHTML += `
@@ -14,19 +15,6 @@ function selectShows() {
 
   dropdownShowMenu.addEventListener("change", selectShowsMenu);
   makePageForShows(allShows);
-}
-
-
-function titleCaseInsensitive(showA, showB) {
-  let nameA = showA.name.toLowerCase();
-  let nameB = showB.name.toLowerCase();
-  if (nameA < nameB) {
-    return -1;
-  }
-  if (nameA > nameB) {
-    return 1;
-  }
-  return 0;
 }
 
 
